@@ -197,8 +197,10 @@ module Faraday
     #
     # Returns the 'Faraday::Response' instance to be served.
     def process(env)
-      entry = @storage.read(@request)
+      #override read-through caching behavior on per-request basis
+      return fetch(env) if env[:request_headers]["X-read-from-cache"] == "false"
 
+      entry = @storage.read(@request)
       return fetch(env) if entry.nil?
 
       if entry.fresh?
