@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
 
+gem 'ci_reporter'
+
 # Specify your gem's dependencies in faraday-cache_store.gemspec
 gemspec
 
