@@ -9,7 +9,7 @@ GIT
 PATH
   remote: .
   specs:
-    faraday-http-cache (0.4.0)
+    tapjoy-faraday-http-cache (0.4.1)
       faraday (~> 0.8)
 
 GEM
@@ -23,6 +23,9 @@ GEM
       tzinfo (~> 0.3.37)
     addressable (2.3.5)
     atomic (1.1.14)
+    builder (3.2.2)
+    ci_reporter (1.9.1)
+      builder (>= 2.1.2)
     cookiejar (0.3.0)
     diff-lcs (1.2.5)
     em-http-request (1.1.2)
@@ -71,9 +74,10 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (>= 3.0)
+  ci_reporter
   em-http-request (~> 1.1.0)
-  faraday-http-cache!
   faraday_middleware!
   rake (~> 10.1.0)
   rspec (= 3.0.0.beta1)
   sinatra (~> 1.4.3)
+  tapjoy-faraday-http-cache!
