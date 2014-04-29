@@ -58,6 +58,7 @@ module Faraday
       # klass - The Class to be instantiated with the recovered informations.
       def read(request, klass = Faraday::HttpCache::Response)
         cache_key = cache_key_for(request)
+        puts cache_key
         found = @cache.read(cache_key)
 
         if found
@@ -78,11 +79,15 @@ module Faraday
       #
       # Returns the encoded String.
       def cache_key_for(request)
-        cache_keys = request.each_with_object([]) do |(key, value), parts|
-          parts << [key.to_s, value]
-        end
+        if request[:request_headers].has_key?("X-Cache-Key")
+          request[:request_headers]["X-Cache-Key"]
+        else
+          cache_keys = request.each_with_object([]) do |(key, value), parts|
+            parts << [key.to_s, value]
+          end
 
-        Digest::SHA1.hexdigest(@serializer.dump(cache_keys.sort))
+          Digest::SHA1.hexdigest(@serializer.dump(cache_keys.sort))
+        end
       end
 
       # Internal: Logs a warning when the 'cache' implementation
