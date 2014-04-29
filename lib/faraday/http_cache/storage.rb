@@ -58,7 +58,6 @@ module Faraday
       # klass - The Class to be instantiated with the recovered informations.
       def read(request, klass = Faraday::HttpCache::Response)
         cache_key = cache_key_for(request)
-        puts cache_key
         found = @cache.read(cache_key)
 
         if found
