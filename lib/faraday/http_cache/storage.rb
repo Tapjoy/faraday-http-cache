@@ -44,9 +44,13 @@ module Faraday
       #           :request_headers - The custom headers for the request.
       # response - The Faraday::HttpCache::Response instance to be stored.
       def write(request, response)
-        key = cache_key_for(request)
-        value = @serializer.dump(response.serializable_hash)
-        @cache.write(key, value)
+        begin
+          key = cache_key_for(request)
+          value = @serializer.dump(response.serializable_hash)
+          @cache.write(key, value)
+        rescue => e
+          @logger.warn("Failed write to cache after request - #{e.to_s}") if @logger
+        end
       end
 
       # Internal: Reads a key based on the given request from the underlying cache.
@@ -57,16 +61,20 @@ module Faraday
       #           :request_headers - The custom headers for the request.
       # klass - The Class to be instantiated with the recovered informations.
       def read(request, klass = Faraday::HttpCache::Response)
-        cache_key = cache_key_for(request)
-        found = @cache.read(cache_key)
+        begin
+          cache_key = cache_key_for(request)
+          found = @cache.read(cache_key)
 
-        if found
-          payload = @serializer.load(found).each_with_object({}) do |(key,value), hash|
-            hash[key.to_sym] = value
+          if found
+            payload = @serializer.load(found).each_with_object({}) do |(key,value), hash|
+              hash[key.to_sym] = value
+            end
+
+            klass.new(payload)
           end
-
-          klass.new(payload)
-        end
+        rescue => e
+          @logger.warn("Failed write to cache after request - #{e.to_s}") if @logger
+        end 
       end
 
       private
