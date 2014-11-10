@@ -49,7 +49,7 @@ module Faraday
           value = @serializer.dump(response.serializable_hash)
           @cache.write(key, value)
         rescue => e
-          @logger.warn("Failed write to cache after request - #{e.to_s}") if @logger
+          @logger.warn("Failed write to cache - #{e.to_s}") if @logger
         end
       end
 
@@ -73,7 +73,7 @@ module Faraday
             klass.new(payload)
           end
         rescue => e
-          @logger.warn("Failed write to cache after request - #{e.to_s}") if @logger
+          @logger.warn("Failed read from cache - #{e.to_s}") if @logger
         end 
       end
 
