@@ -69,6 +69,13 @@ describe Faraday::HttpCache::Storage do
       it_behaves_like 'serialization'
     end
 
+    context 'with cache write failure' do
+      it 'should not raise' do
+        cache.stub(:write).and_raise(StandardError.new("e"))
+        expect{subject.write(request, response)}.to_not raise_error
+      end
+    end
+
   end
 
   describe 'reading responses' do
@@ -80,6 +87,13 @@ describe Faraday::HttpCache::Storage do
       subject.write(request, response)
 
       expect(subject.read(request)).to be_a(Faraday::HttpCache::Response)
+    end
+
+    context 'with cache read failure' do
+      it 'should not raise' do
+        cache.stub(:read).and_raise(StandardError.new("e"))
+        expect{subject.read(request, response)}.to_not raise_error
+      end
     end
   end
 
